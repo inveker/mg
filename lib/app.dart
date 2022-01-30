@@ -1,57 +1,77 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:meta_garden/config.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meta_garden/bloc/frame/frame_bloc.dart';
+import 'package:meta_garden/bloc/nft/nft_bloc.dart';
+import 'package:meta_garden/bloc/ticker/ticker_bloc.dart';
 import 'package:meta_garden/flower/flower.dart';
-import 'package:meta_garden/flower/palette.dart';
-import 'package:meta_garden/flower/plant_type.dart';
-import 'package:meta_garden/flower/vegetation.dart';
 import 'package:meta_garden/nft.dart';
-import 'package:meta_garden/render_tiker.dart';
-import 'package:meta_garden/scene.dart';
-import 'package:meta_garden/utils/vector2.dart';
-import 'package:meta_garden/widgets/controllers.dart';
-import 'package:meta_garden/widgets/main.dart';
-import 'package:meta_garden/widgets/main_background.dart';
-import 'package:meta_garden/widgets/renderer.dart';
-import 'package:uuid/uuid.dart';
+import 'package:meta_garden/pages/nft_creator_page.dart';
+import 'package:meta_garden/pages/nft_generator_page.dart';
 
-class App extends StatefulWidget {
+class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
 
   @override
-  State<App> createState() => _AppState();
+  Widget build(BuildContext context) {
+    return _Bloc(
+      child: _App(),
+    );
+  }
 }
 
-class _AppState extends State<App> {
+class _Bloc extends StatelessWidget {
+  final Widget child;
 
-  @override
-  void initState() {
-    renderTicker.start();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    renderTicker.dispose();
-    super.dispose();
-  }
+  const _Bloc({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Stack(
-          children: [
-            const Positioned.fill(child: MainBackground(key: ValueKey('111'),child: Center(),)),
-            Positioned.fill(
-              child: Main(),
-            ),
-          ],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => TickerBloc(),
         ),
+        BlocProvider(
+          create: (context) => FrameBloc(),
+        ),
+        BlocProvider(
+          create: (context) => NftBloc(nft: Nft(flower: Flower.random())),
+        ),
+      ],
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<TickerBloc, TickerState>(
+            listener: (context, state) {
+              if (!state.isPaused) {
+                context.read<FrameBloc>().add(const FrameTicked());
+              }
+            },
+          ),
+          BlocListener<NftBloc, NftState>(
+            listener: (context, state) {
+              print('reset_frame');
+              context.read<FrameBloc>().add(const FrameReset());
+            },
+          ),
+        ],
+        child: child,
       ),
+    );
+  }
+}
+
+class _App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      initialRoute: 'creator',
+      routes: {
+        'creator': (context) => NftCreatorPage(),
+        'builder': (context) => NftGeneratorPage(),
+      },
     );
   }
 }

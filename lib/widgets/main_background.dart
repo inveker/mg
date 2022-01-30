@@ -4,8 +4,6 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:meta_garden/render_tiker.dart';
 import 'package:meta_garden/utils/vector2.dart';
 
 
@@ -37,16 +35,26 @@ class _MainBackgroundState extends State<MainBackground> {
   late ValueNotifier animationNotifier;
   late List<CircleParticle> particles;
 
+
+  double _lastDt = 0;
+
+
+  late Ticker renderTicker;
+
+
   @override
   void initState() {
-    print('NEW STATE');
-    animationNotifier = ValueNotifier<double>(0);
+    animationNotifier = ValueNotifier(_lastDt);
 
-    tickerNotifier.addListener(() {
-      animationNotifier.value = tickerNotifier.value;
-      animationNotifier.notifyListeners();
+    renderTicker = Ticker((elapsed) {
+      int time = elapsed.inMilliseconds;
+      var ms = time / 1000;
+      double deltaTime = ms - _lastDt;
+      _lastDt = ms;
+      animationNotifier.value = deltaTime;
     });
 
+    renderTicker.start();
 
     particles = [];
 

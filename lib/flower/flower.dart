@@ -9,9 +9,12 @@ import 'package:meta_garden/flower/growth/growth.dart';
 import 'package:meta_garden/flower/growth/growth_linear.dart';
 import 'package:meta_garden/flower/petal/petal.dart';
 import 'package:meta_garden/flower/petal/petal_circle.dart';
+import 'package:meta_garden/flower/petal/petal_square.dart';
+import 'package:meta_garden/flower/petal/petal_triangle.dart';
 import 'package:meta_garden/flower/vegetation.dart';
 import 'bud/bud_center.dart';
 import 'bud/bud_circle_border.dart';
+import 'dimension/dimension_async.dart';
 import 'palette.dart';
 
 class Flower {
@@ -57,11 +60,14 @@ class Flower {
     final petalType = json['petal']['type'];
     late Petal petal;
     if(petalType == 'PetalCircle') petal = PetalCircle.fromJson(json['petal']);
+    else if(petalType == 'PetalSquare') petal = PetalSquare.fromJson(json['petal']);
+    else if(petalType == 'PetalTriangle') petal = PetalTriangle.fromJson(json['petal']);
 
     final dimensionType = json['dimension']['type'];
     late Dimension dimension;
     if(dimensionType == 'DimensionNot') dimension = DimensionNot.fromJson(json['dimension']);
     else if(dimensionType == 'DimensionAll') dimension = DimensionAll.fromJson(json['dimension']);
+    else if(dimensionType == 'DimensionAsync') dimension = DimensionAsync.fromJson(json['dimension']);
 
     final growthType = json['growth']['type'];
     late Growth growth;

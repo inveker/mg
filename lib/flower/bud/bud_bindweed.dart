@@ -9,6 +9,7 @@ class BudBindweed extends Bud {
   late Vector2 currentVelocity;
 
   BudBindweed.fromJson(Map<String, dynamic> json) : super.fromJson(json);
+
   BudBindweed({
     required int particlesCount,
     required List<Vector2> positions,
@@ -17,6 +18,8 @@ class BudBindweed extends Bud {
     required double speed,
     required double angle,
     required PlantType plantType,
+    required bool isRandom,
+    required bool isRandomSpeed,
   }) : super(
           particlesCount: particlesCount,
           positions: positions,
@@ -25,32 +28,47 @@ class BudBindweed extends Bud {
           speed: speed,
           angle: angle,
           plantType: plantType,
-        ) {
-    currentVelocity = velocity.copy();
-  }
+          isRandom: isRandom,
+          isRandomSpeed: isRandomSpeed,
+        );
 
+  @override
+  void constructor() {
+    super.constructor();
+    currentVelocity = velocity!.copy();
+  }
 
   factory BudBindweed.random() {
     return BudBindweed(
-        particlesCount: 1 + random.nextInt(5),
-        positions: [],
-        movedPositions: [],
-        velocity: Vector2.random(),
-        speed: 150.0,
-        angle: 360,
+      particlesCount: 1 + random.nextInt(5),
+      positions: [],
+      movedPositions: [],
+      velocity: Vector2.random(),
+      speed: random.nextInt(300).toDouble(),
+      angle: random.sign() * random.nextInt(300).toDouble(),
+      isRandom: random.nextBool(),
+      isRandomSpeed: random.nextBool(),
       plantType: PlantType.random(),
-        );
+    );
   }
 
   @override
   void generate(Scene context, double dt) {
+    if (g2) return;
     super.generate(context, dt);
     if (currentPositions!.isEmpty) return;
-    currentVelocity = currentVelocity.rotate(radians(angle! * dt));
+    if(isRandom!) {
+      currentVelocity = currentVelocity.rotate(radians(angle!.sign * random.nextInt(1 + angle!.toInt().abs()) * dt));
+    } else {
+      currentVelocity = currentVelocity.rotate(radians(angle! * dt));
+    }
 
     for (var i = 0; i < currentPositions!.length; i++) {
-
-      currentPositions![i] += currentVelocity * speed! * dt;
+      if(isRandomSpeed!) {
+        currentPositions![i] += currentVelocity * random.nextInt(1 + speed!.toInt()) * dt;
+      } else {
+        currentPositions![i] += currentVelocity * speed! * dt;
+      }
     }
 
     for (var i = 0; i < particlesCount; i++) {
@@ -76,6 +94,8 @@ class BudBindweed extends Bud {
     Vector2? velocity,
     double? speed,
     double? angle,
+    bool? isRandom,
+    bool? isRandomSpeed,
   }) {
     return BudBindweed(
       particlesCount: particlesCount ?? this.particlesCount,
@@ -85,6 +105,8 @@ class BudBindweed extends Bud {
       speed: speed ?? this.speed!,
       angle: angle ?? this.angle!,
       plantType: plantType ?? this.plantType,
+      isRandom: isRandom ?? this.isRandom!,
+      isRandomSpeed: isRandomSpeed ?? this.isRandomSpeed!,
     );
   }
 }

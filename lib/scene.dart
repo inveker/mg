@@ -48,16 +48,30 @@ class Scene {
 
       p.position += (p.velocity) * dt * p.speed;
 
-      var newOpacity = p.color.opacity - 0.3 * dt;
+      if(flower.bud.g2) {
+        p.opacitySpeed += 10 * dt;
+        p.width *= 0.8 * 60 * dt;
+      }
+
+      var newOpacity = p.color.opacity - p.opacitySpeed * dt;
       if (newOpacity < 0) newOpacity = 0;
       p.color = p.color.withOpacity(newOpacity);
+
 
       bool notOpacity = p.color.opacity == 0;
       bool notSize = p.width <= 0;
       if (notOpacity || notSize) {
         particles.remove(p);
       }
+      if(flower.bud.g2 && p.freezed) particles.remove(p);
     });
+    if(flower.bud.g) {
+      if(particles.length > 20) {
+        particles = particles.sublist((particles.length / 20).toInt());
+      } else if(particles.length > 1){
+        particles = particles.sublist(1);
+      }
+    }
   }
 }
 
@@ -79,6 +93,7 @@ class FlowerParticle {
   late double rotationX;
   late double rotationZ;
   late bool freezed;
+  late double opacitySpeed;
 
   FlowerParticle({ required this.colors, required this.position}) {
     rotationY = 0;
@@ -87,6 +102,7 @@ class FlowerParticle {
     velocity = Vector2.random();
     width = 10;
     speed = 100;
+    opacitySpeed = 0.3;
     freezed = false;
     if (random.percent(30)) {
       type = FlowerParticleType.light;

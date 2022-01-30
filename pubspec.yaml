@@ -31,6 +31,9 @@ dependencies:
     sdk: flutter
   google_fonts:
   uuid:
+  bloc:
+  flutter_bloc:
+  equatable: 
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -39,6 +42,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   palette: ^1.1.0+1
   neon: ^0.1.0
+  image: ^3.1.1
 
 dev_dependencies:
   flutter_test:

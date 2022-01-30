@@ -37,6 +37,7 @@ class BudCircle extends Bud {
 
   @override
   void generate(Scene context, double dt) {
+    if(g2) return;
     super.generate(context, dt);
     if(currentPositions!.isEmpty) return;
     for (var i = 0; i < particlesCount; i++) {
@@ -67,6 +68,8 @@ class BudCircle extends Bud {
     Vector2? velocity,
     double? speed,
     double? angle,
+    bool? isRandom,
+    bool? isRandomSpeed,
   }) {
     return BudCircle(
       particlesCount: particlesCount ?? this.particlesCount,

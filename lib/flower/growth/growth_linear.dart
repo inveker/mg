@@ -1,6 +1,7 @@
 import 'package:meta_garden/flower/growth/growth.dart';
 import 'package:meta_garden/scene.dart';
 import 'package:meta_garden/utils/utils.dart';
+import 'package:meta_garden/widgets/main.dart';
 
 class GrowthLinear extends Growth {
   GrowthLinear.fromJson(Map<String, dynamic> json) : super.fromJson(json);
@@ -24,6 +25,7 @@ class GrowthLinear extends Growth {
   @override
   void update(Scene context, double dt) {
     context.particles.forEach((element) {
+      // if(nft.flower.bud.g2) return;
       if (element.freezed) {
         element.speed = 20;
       } else {

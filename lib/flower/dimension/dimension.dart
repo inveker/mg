@@ -35,6 +35,7 @@ abstract class Dimension {
     angleDirY = json['angleDirY'];
     angleZ = json['angleZ'];
     angleDirZ = json['angleDirZ'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -46,6 +47,7 @@ abstract class Dimension {
       'angleDirY': angleDirY,
       'angleZ': angleZ,
       'angleDirZ': angleDirZ,
+      'type': type,
     };
   }
 

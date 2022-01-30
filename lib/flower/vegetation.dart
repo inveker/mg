@@ -1,5 +1,6 @@
 import 'package:meta_garden/scene.dart';
 import 'package:meta_garden/utils/utils.dart';
+import 'package:meta_garden/widgets/main.dart';
 
 class Vegetation {
   late final double rate;
@@ -10,7 +11,13 @@ class Vegetation {
 
   factory Vegetation.random() {
     return Vegetation(
-      rate: 3.0 + random.nextInt(5),
+      rate: 2.0 + random.nextInt(5),
+    );
+  }
+
+  Vegetation copyWith({double? rate}) {
+    return Vegetation(
+      rate: rate ?? this.rate,
     );
   }
 
@@ -26,8 +33,8 @@ class Vegetation {
 
   void update(Scene context, double dt) {
     for (var p in context.particles) {
-      if(!p.freezed)
-      p.width += (p.width) * rate * dt;
+      if (nft.flower.bud.g2) return;
+      if (!p.freezed) p.width += (p.width) * rate * dt;
     }
   }
 }
