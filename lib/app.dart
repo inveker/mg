@@ -29,36 +29,17 @@ class _Bloc extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FrameBloc();
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => TickerBloc(),
         ),
         BlocProvider(
-          create: (context) => FrameBloc(),
-        ),
-        BlocProvider(
           create: (context) => NftBloc(nft: Nft(flower: Flower.random())),
         ),
       ],
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<TickerBloc, TickerState>(
-            listener: (context, state) {
-              if (!state.isPaused) {
-                context.read<FrameBloc>().add(const FrameTicked());
-              }
-            },
-          ),
-          BlocListener<NftBloc, NftState>(
-            listener: (context, state) {
-              print('reset_frame');
-              context.read<FrameBloc>().add(const FrameReset());
-            },
-          ),
-        ],
-        child: child,
-      ),
+      child: child,
     );
   }
 }

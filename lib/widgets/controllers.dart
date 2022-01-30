@@ -27,24 +27,71 @@ class Controllers extends StatelessWidget {
     return BlocBuilder<NftBloc, NftState>(
       buildWhen: (p, n) => p.nft != n.nft,
       builder: (context, state) {
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              _ControlButtons(),
-              const SizedBox(height: 20),
-              _BudTypeSelector(),
-              if (state.nft.flower.bud.angle != null) _BudAngleSelector(),
-              _GrowthForm(),
-              _PlantTypeSelector(),
-              _PetalForm(),
-              if (state.nft.flower.dimension.angleX != null) _DimensionForm(),
-              _BudForm(),
-              _VegetationForm(),
-              _PaletteForm(),
-              _GenerateButton(),
-            ],
-          ),
-        );
+        return DefaultTabController(
+            length: 8,
+            child: Column(
+              children: [
+                TabBar(
+                  labelStyle: TextStyle(color: Colors.black45),
+                  unselectedLabelStyle: TextStyle(color: Colors.black45),
+                  tabs: [
+                    Tab(
+                      child: Text('Vegetation', style: TextStyle(color: Colors.black45),),
+                    ),
+                    Tab(
+                      child: Text('Bud'),
+                    ),
+                    Tab(
+                      child: Text('Dimension'),
+                    ),
+                    Tab(
+                      child: Text('Growth'),
+                    ),
+                    Tab(
+                      child: Text('Petal'),
+                    ),
+                    Tab(
+                      child: Text('Petal'),
+                    ),
+                    Tab(
+                      child: Text('Palette'),
+                    ),
+                    Tab(
+                      child: Text('Plant'),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: TabBarView(children: [
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _ControlButtons(),
+                          const SizedBox(height: 20),
+                          _BudTypeSelector(),
+                          if (state.nft.flower.bud.angle != null) _BudAngleSelector(),
+                          _GrowthForm(),
+                          _PlantTypeSelector(),
+                          _PetalForm(),
+                          if (state.nft.flower.dimension.angleX != null) _DimensionForm(),
+                          _BudForm(),
+                          _VegetationForm(),
+                          _PaletteForm(),
+                          _GenerateButton(),
+                        ],
+                      ),
+                    ),
+                    Center(),
+                    Center(),
+                    Center(),
+                    Center(),
+                    Center(),
+                    Center(),
+                    Center(),
+                  ]),
+                )
+              ],
+            ));
       },
     );
   }

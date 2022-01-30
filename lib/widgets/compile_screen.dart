@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:meta_garden/bloc/frame/frame_bloc.dart';
 import 'package:meta_garden/config.dart';
 import 'package:meta_garden/nft.dart';
 import 'package:meta_garden/scene.dart';
@@ -34,7 +35,7 @@ class _CompileScreenState extends State<CompileScreen> {
 
 Future<void> recorderFromSavedApp() async {
 
-  FrameManager.frameRate = 50;
+  FrameBloc.i.setFrameRate(50);
 
   var time = DateTime.now().millisecondsSinceEpoch;
   var dir = Directory(r'C:\Users\User\AndroidStudioProjects\meta_garden\lib\images\');
@@ -44,7 +45,6 @@ Future<void> recorderFromSavedApp() async {
   final double imageHeight = Config.pictureHeight.toDouble();
 
   for(var file in files) {
-    FrameManager.reset();
     Nft savedNft = Nft.fromJson(jsonDecode(file.readAsStringSync()));
     var localTime = DateTime.now().millisecondsSinceEpoch;
     String nftName = savedNft.fileName;
@@ -62,12 +62,12 @@ Future<void> recorderFromSavedApp() async {
       flower: savedNft.flower,
     );
 
-    for(var i = 0; i < FrameManager.allFrames; i++) {
-      await Future.delayed(Duration(milliseconds: FrameManager.frameTime.toInt()), () async {
+    for(var i = 0; i < FrameBloc.i.state.allFrames; i++) {
+      await Future.delayed(Duration(milliseconds: FrameBloc.i.state.frameTime.toInt()), () async {
         final recorder = PictureRecorder();
         final canvas = Canvas(recorder, new Rect.fromLTWH(0.0, 0.0, imageWidth, imageHeight));
         scene.paint(canvas, Size(imageWidth, imageHeight));
-        scene.update(FrameManager.frameTime / 1000);
+        scene.update(FrameBloc.i.state.frameTime / 1000);
         final picture = recorder.endRecording();
         final img = await picture.toImage(imageWidth.toInt(), imageHeight.toInt());
         var pngBytes = await img.toByteData(format: ImageByteFormat.png );
@@ -76,10 +76,7 @@ Future<void> recorderFromSavedApp() async {
           ..writeAsBytes(pngBytes!.buffer.asInt8List(pngBytes.offsetInBytes, pngBytes.lengthInBytes))
           ..createSync(recursive: true);
 
-        print('${(i)  / (FrameManager.allFrames) * 100}%');
-
-        FrameManager.tick();
-
+        print('${(i)  / (FrameBloc.i.state.allFrames) * 100}%');
       });
     }
     print('Success: ${DateTime.now().millisecondsSinceEpoch - localTime}');

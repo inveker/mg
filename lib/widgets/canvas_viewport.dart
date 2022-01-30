@@ -39,7 +39,6 @@ class _CanvasViewportState extends State<CanvasViewport> {
             buildWhen: (p, n) => p.nft != n.nft,
             builder: (context, state) {
               return Renderer(
-                key: ValueKey(state.nft),
                 scene: Scene(
                   flower: state.nft.flower,
                 ),
@@ -107,6 +106,7 @@ class _ControllersState extends State<_Controllers> {
 
   void _onPanEnd(DragEndDetails e) {
     _nftBloc!.add(NftSaveMovedPosition(_movedPositions));
+    _movedPositions = [];
   }
 }
 

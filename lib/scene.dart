@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:meta_garden/bloc/frame/frame_bloc.dart';
 import 'package:meta_garden/flower/flower.dart';
 import 'package:meta_garden/utils/utils.dart';
 import 'package:meta_garden/utils/vector2.dart';
 
+int id = 0;
 class Scene {
   final Flower flower;
   List<FlowerParticle> particles = [];
 
+  var iid;
   Scene({
     required this.flower,
-  });
+  }) {
+    iid = id++;
+    FrameBloc.i.reset();
+  }
 
   void paint(Canvas canvas, Size size) {
     canvas.drawPaint(Paint()..color = Colors.black);
@@ -38,6 +44,7 @@ class Scene {
   }
 
   void update(double dt) {
+    print('iid $iid');
     flower
       ..bud.generate(this, dt)
       ..vegetation.update(this, dt)
@@ -69,9 +76,10 @@ class Scene {
       if(particles.length > 20) {
         particles = particles.sublist((particles.length / 20).toInt());
       } else if(particles.length > 1){
-        particles = particles.sublist(1);
+        // particles = particles.sublist(1);
       }
     }
+    FrameBloc.i.tick();
   }
 }
 

@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meta_garden/bloc/nft/nft_bloc.dart';
 import 'package:meta_garden/config.dart';
 import 'package:meta_garden/widgets/canvas_viewport.dart';
 import 'package:meta_garden/widgets/controllers.dart';
@@ -18,16 +21,19 @@ class NftCreatorPage extends StatelessWidget {
             ),
           ),
           Positioned.fill(
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                _NeonHeader(),
-                const SizedBox(height: 40),
-                _Main(),
-                const SizedBox(height: 40),
-                _NeonFooter(),
-                const SizedBox(height: 20),
-              ],
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 20),
+                  _NeonHeader(),
+                  const SizedBox(height: 40),
+                  _Main(),
+                  const SizedBox(height: 40),
+                  _NeonFooter(),
+                  const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         ],
@@ -70,24 +76,32 @@ class _NeonFooter extends StatelessWidget {
 class _Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CanvasViewport(),
-        const SizedBox(
-          width: 60,
-        ),
-        SingleChildScrollView(
-          child: Container(
-            width: Config.pictureWidth.toDouble() - 30,
-            height: 600,
-            color: Color(0xFFF3F4F8),
-            padding: EdgeInsets.all(20),
-            child: Controllers(),
-          ),
-        ),
-      ],
+    return BlocBuilder<NftBloc, NftState>(
+      builder: (context, state) {
+        return Row(
+          key: ValueKey(state.nft),
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CanvasViewport(),
+            const SizedBox(
+              width: 60,
+            ),
+            SingleChildScrollView(
+              child: Container(
+                width: Config.pictureWidth.toDouble() - 30,
+                height: 600,
+                decoration: BoxDecoration(
+                  color: Color(0xFFF3F4F8),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: EdgeInsets.all(20),
+                child: Controllers(),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

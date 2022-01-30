@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meta_garden/bloc/frame/frame_bloc.dart';
 import 'package:meta_garden/flower/bud/bud_bindweed.dart';
 import 'package:meta_garden/flower/bud/bud_center.dart';
 import 'package:meta_garden/flower/bud/bud_circle.dart';
@@ -104,10 +105,12 @@ abstract class Bud {
   bool isInit = false;
 
   void generate(Scene context, double dt) {
-    if(FrameManager.time > 1000 * 7) {
+    print('FrameBloc.i.state.time ${FrameBloc.i.state.time}');
+    print('FrameBloc.i.state.frame ${FrameBloc.i.state.currentFrame}');
+    if(FrameBloc.i.state.time > 1000 * 7) {
       g = true;
     }
-    if(FrameManager.time > 1000 * 7 + 1000 * 1) {
+    if(FrameBloc.i.state.time > 1000 * 7 + 1000 * 1) {
       g2 = true;
     }
     if (g2) return;

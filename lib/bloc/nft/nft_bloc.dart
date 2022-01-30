@@ -144,9 +144,6 @@ class NftBloc extends Bloc<NftEvent, NftState> {
         ),
       ),
     );
-
-    print(nft.flower.bud.positions);
-    print(nft.flower.bud.movedPositions);
   }
 
   void _addBud(NftAddBud event, Emitter<NftState> emit) {
